@@ -20,20 +20,11 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-from tools.translate import _
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 import time
 
-class account_invoice_type(osv.osv):
-    _name = "account.invoice.type"
-    _description = "Account Invoice Type"
-
-    _columns = {
-        'name': fields.char('Name',size=128, required=True, translate=True),
-    }
-
-account_invoice_type()
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
@@ -42,9 +33,8 @@ class account_invoice(osv.osv):
         return [('none', _('Free Reference'))] #,
     
     _columns = {
-        'account_invoice_type': fields.many2one('account.invoice.type', 'Invoice Type'),
-        'supplier_invoice_number': fields.char('Supplier Inv Ref', size=64, help="The reference of this invoice as provided by the supplier."),
-        'fapiao_date': fields.date('V.A.T Date', ),
+        'supplier_invoice_number': fields.char('Officer Fapiao', size=64, help="The reference of this invoice as provided by the supplier."),
+        'fapiao_date': fields.date('Fapiao Date', ),
         'partner_ref': fields.related('partner_id','ref',type='char', size=64, string='Partner Ref'),
         'reference_type': fields.selection(_get_reference_type, 'Payment Reference',
             required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -89,10 +79,6 @@ class account_invoice_line(osv.osv):
                     'invoice_id', 'date_invoice',
                     type='date', relation='account.invoice',
                     string='Date Invoice',select=1),
-        'fapiao_date': fields.related(
-                    'invoice_id', 'fapiao_date',
-                    type='date', relation='account.invoice',
-                    string='V.A.T Date',select=1),
         'state': fields.related(
                     'invoice_id', 'state',
                     type='char', size=16,relation='account.invoice',

@@ -29,9 +29,7 @@
     'description': """
 Invoice Line
 ==================================================
-* Add Account Invoice Line View
-* Add Account Invoice Type
-* Add Several New Fields to Invoice supplier_invoice_number, fapiao_date, partner_ref, reference_type
+Fine tune Account Invoice Line
     """,
     'author': 'Elico Corp',
     'website': 'http://www.elico-corp.com',
