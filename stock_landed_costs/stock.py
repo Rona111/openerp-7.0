@@ -153,11 +153,6 @@ class stock_move(orm.Model):
     _inherit = 'stock.move'
     # TODO refact the structures.
     # currently just mainly reference from module: purchase_landed_costs
-    def copy_data(self, cr, uid, id, default=None, context=None):
-	res = super(stock_move, self).copy_data(cr, uid, id, default, context)
-	if 'duty_rule_computed' in res:
-	    res.update({'duty_rule_computed': False})
-	return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         '''rewrite the copy method to avoid copy the field: landed_cost_line_ids'''
@@ -664,8 +659,6 @@ class stock_move(orm.Model):
         rewrite this function to get the right cost price.
         """
         product_uom_obj = self.pool.get('product.uom')
-	reference_amount = 0.0
-        reference_currency_id = False
 
         # by default the reference currency is that of the move's company
         reference_currency_id = move.company_id.currency_id.id

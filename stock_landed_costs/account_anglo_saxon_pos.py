@@ -22,10 +22,73 @@
 from openerp.osv import orm, osv, fields
 import time
 from openerp.tools.translate import _
-
+from openerp import netsvc, tools
 
 class pos_order(orm.Model):
     _inherit = 'pos.order'
+
+    def create_picking(self, cr, uid, ids, context=None):
+        """Create a picking for each order and validate it."""
+        picking_obj = self.pool.get('stock.picking.out')
+        partner_obj = self.pool.get('res.partner')
+        move_obj = self.pool.get('stock.move')
+
+        for order in self.browse(cr, uid, ids, context=context):
+            addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
+            picking_id = picking_obj.create(cr, uid, {
+                'origin': order.name,
+                'partner_id': addr.get('delivery',False),
+                'type': 'out',
+                'company_id': order.company_id.id,
+                'move_type': 'direct',
+                'note': order.note or "",
+                'invoice_state': 'none',
+                'auto_picking': True,
+            }, context=context)
+            self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
+            location_id = order.shop_id.warehouse_id.lot_stock_id.id
+            if order.partner_id:
+                destination_id = order.partner_id.property_stock_customer.id
+            else:
+                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)['property_stock_customer']
+            for line in order.lines:
+                if line.product_id and line.product_id.type == 'service':
+                    continue
+                if line.product_id.supply_method == 'bundle':
+                    if line.product_id.item_ids:
+                        tem_lines = filter(None, map(lambda x:x, line.product_id.item_ids))
+                        for bline in tem_lines:
+                            move_obj.create(cr, uid, {
+                                'name': line.name,
+                                'product_uom': bline.item_id.uom_id.id,
+                                'product_uos': bline.item_id.uom_id.id,
+                                'picking_id': picking_id,
+                                'product_id': bline.item_id.id,
+                                'product_uos_qty': abs(line.qty * bline.qty_uom),
+                                'product_qty': abs(line.qty * bline.qty_uom),
+                                'tracking_id': False,
+                                'state': 'draft',
+                                'location_id': location_id if line.qty >= 0 else destination_id,
+                                'location_dest_id': destination_id if line.qty >= 0 else location_id,
+                            }, context=context)
+                move_obj.create(cr, uid, {
+                    'name': line.name,
+                    'product_uom': line.product_id.uom_id.id,
+                    'product_uos': line.product_id.uom_id.id,
+                    'picking_id': picking_id,
+                    'product_id': line.product_id.id,
+                    'product_uos_qty': abs(line.qty),
+                    'product_qty': abs(line.qty),
+                    'tracking_id': False,
+                    'state': 'draft',
+                    'location_id': location_id if line.qty >= 0 else destination_id,
+                    'location_dest_id': destination_id if line.qty >= 0 else location_id,
+                }, context=context)
+
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+            picking_obj.force_assign(cr, uid, [picking_id], context)
+        return True
 
     def _create_account_move_line(self, cr, uid, ids, session=None, move_id=None, context=None):
         # Tricky, via the workflow, we only have one id in the ids variable
