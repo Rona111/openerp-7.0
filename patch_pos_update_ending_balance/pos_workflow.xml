@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="workflow.activity" id="point_of_sale.act_close">
+          <field name="action">wkf_check_final_balance()
+            wkf_action_close()</field>
+        </record>
+    </data>
+</openerp>
