@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">product.normal.form.tradevine.inherit</field>
+            <field name="model">product.product</field>
+            <field name="priority">5</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <data>                   
+                    <xpath expr="//page[@string='Information']/group/group/field[@name='default_code']" position="before">
+                        <field name="tradevine_product_id"/>    
+                    </xpath>
+                    <xpath expr="//div[@name='buttons']">
+                        <button name="sync_with_tradevine" string="Sync. To Tradevine" type="object"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>   
+        <record id="view_sale_tradevine_form" model="ir.ui.view">
+            <field name="name">sale.order.view.tradevine.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_payment_method.sale_order_view_form" />
+            <field name="arch" type="xml">
+            <field name="name" position="after">
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button name="create_payment_for_existing_SQ" type="object" string="Create Prepayments for existing SQs" help="Normally we don't need this button, and it's only visible by users with admin rights. This button is only needed in this case: The SQ (eg. PayNow) has already been imported, but the prepayments are not created due to some reasons" groups="base.group_system"/>
+                    </div>
+                </field>
+        </field>
+        </record> 
+    </data>
+</openerp>

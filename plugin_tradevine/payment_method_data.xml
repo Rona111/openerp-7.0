@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+    
+        <record id="payment_method_26001" model="payment.method">
+          <field name="code">26001</field>
+          <field name="name">Cash</field>
+        </record>
+        <record id="payment_method_26002" model="payment.method">
+          <field name="code">26002</field>
+          <field name="name">Bank Transfer</field>
+        </record>
+        <record id="payment_method_26003" model="payment.method">
+          <field name="code">26003</field>
+          <field name="name">Credit Card</field>
+        </record>
+        <record id="payment_method_26004" model="payment.method">
+          <field name="code">26004</field>
+          <field name="name">Cheque</field>
+        </record>
+        <record id="payment_method_26005" model="payment.method">
+          <field name="code">26005</field>
+          <field name="name">Escrow</field>
+        </record>
+        <record id="payment_method_26006" model="payment.method">
+          <field name="code">26006</field>
+          <field name="name">Other</field>
+        </record>
+        <record id="payment_method_26007" model="payment.method">
+          <field name="code">26007</field>
+          <field name="name">PayPal</field>
+        </record>
+        <record id="payment_method_26008" model="payment.method">
+          <field name="code">26008</field>
+          <field name="name">EFTPOS</field>
+        </record>
+    
+    </data>
+</openerp>
