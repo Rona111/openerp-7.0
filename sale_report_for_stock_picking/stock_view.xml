@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+<data>
+ 
+<record model="ir.ui.view" id="stock_picking_print_sale_report">
+    <field name="name">stock.picking.form.print_sale_report</field>
+    <field name="model">stock.picking</field>
+    <field name="inherit_id" ref="stock.view_picking_form"/>
+    <field name="priority" eval="10"/>
+    <field name="arch" type="xml">
+        <xpath expr="//button[@name='button_cancel']" position="after">
+            <button name="print_sale_report" string="Print On-Trade Report" type="object" attrs="{'invisible': [('origin','=', False)]}" invisible="1"/>
+        </xpath>
+    </field>
+</record>
+
+<!--report auto="False" id="report_sale_order_wintout_discount" model="stock.picking" name="sale.order.picking.without.discount" rml="sale_report_for_stock_picking/report/sale_order_without_discount.rml" string="On-Trade Report"
+                usage="default" /-->
+
+
+</data>
+</openerp>
