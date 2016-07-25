@@ -15,5 +15,5 @@
         'views/ir_actions.xml'
     ],
     'installable': True,
-    'application': False
+    'application': False,
 }

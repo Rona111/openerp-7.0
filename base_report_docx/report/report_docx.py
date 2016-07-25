@@ -17,8 +17,6 @@ _logger = logging.getLogger(__name__)
 
 class ReportDocx(report_sxw):
     def create(self, cr, uid, ids, data, context=None):
-        import pdb
-        pdb.set_trace()
         self.pool = pooler.get_pool(cr.dbname)
         self.cr = cr
         self.uid = uid
@@ -37,7 +35,7 @@ class ReportDocx(report_sxw):
     def create_source_docx(self, cr, uid, ids, context=None):
         data = self.generate_docx_data(cr, uid, ids, context)
 
-        tmp_folder_name = '/home/rona/docx_to_pdf/'
+        tmp_folder_name = '/tmp/docx_to_pdf/'
         output_type = self._get_output_type(cr, uid, context)
         output_report = {
             'pdf': 'report.pdf',
@@ -200,8 +198,6 @@ class ReportDocx(report_sxw):
         tmp_folder_name,
         docx_template_name, convert_docx_file_name
     ):
-        import pdb
-        pdb.set_trace()
         action_id = context['params']['action']
         action = self.pool.get('ir.actions.report.xml').browse(
             cr, uid, action_id, context)
@@ -318,8 +314,6 @@ class ReportDocx(report_sxw):
         return action.watermark_template.datas
 
     def _get_output_type(self, cr, uid, context):
-        import pdb
-        pdb.set_trace()
         action_id = context['params']['action']
         action = self.pool.get('ir.actions.report.xml').browse(
             cr, uid, action_id, context)
