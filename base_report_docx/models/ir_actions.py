@@ -30,8 +30,6 @@ class ir_actions_report_xml(osv.osv):
     }
 
     def create_action(self, cr, uid, ids, context=None):
-        import pdb
-        pdb.set_trace()
         """ Create a contextual action for each of the report."""
         for ir_actions_report_xml in self.browse(cr, uid, ids, context=context):
             ir_values_id = self.pool['ir.values'].create(cr, SUPERUSER_ID, {
